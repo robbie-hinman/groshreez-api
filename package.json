@@ -1,0 +1,24 @@
+{
+  "name": "groshreez-api",
+  "version": "1.0.0",
+  "description": "Backend for groshreez react app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robbie-hinman/groshreez-api.git"
+  },
+  "author": "robbie.hinman@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robbie-hinman/groshreez-api/issues"
+  },
+  "homepage": "https://github.com/robbie-hinman/groshreez-api#readme",
+  "dependencies": {
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.9.3"
+  }
+}
