@@ -2,7 +2,7 @@ const express = require('express');
 const Sequelize = require('sequelize');
 const app = express();
 const sequelize = new Sequelize(
-  'postgres://robbieh@localhost:5432/sequelize-proj1'
+  'postgres://robbieh@localhost:5432/sequelize-proj1',
 );
 const port = process.env.PORT || 3000;
 
@@ -13,18 +13,18 @@ User.init(
     // attributes
     firstName: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     lastName: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
       // allowNull defaults to true
-    }
+    },
   },
   {
     sequelize,
-    modelName: 'user'
+    modelName: 'user',
     // options
-  }
+  },
 );
 
 // Note: using `force: true` will drop the table if it already exists
@@ -32,7 +32,7 @@ User.sync({ force: true }).then(() => {
   // Now the `users` table in the database corresponds to the model definition
   return User.create({
     firstName: 'John',
-    lastName: 'Hancock'
+    lastName: 'Hancock',
   });
 });
 
@@ -46,11 +46,9 @@ app.get('/users', (req, res, err) => {
   });
 });
 
-app.get('/users-aw', (req, res, err) => {
-  const users = await User.findAll()
-  
-    res.send(JSON.stringify(users));
-  
+app.get('/users-aw', async (req, res, err) => {
+  const users = await User.findAll();
+  res.send(JSON.stringify(users));
 });
 
 // check if the connection string works.
@@ -64,5 +62,5 @@ app.get('/users-aw', (req, res, err) => {
 //   });
 
 app.listen(port, () =>
-  console.log(`Express web app available at localhost: ${port}`)
+  console.log(`Express web app available at localhost: ${port}`),
 );
