@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING);
 const User = require('./models/User')(sequelize);
 const List = require('./models/List')(sequelize);
-// const ListMember = require('./models/ListMember')(sequelize);
+const ListMember = require('./models/ListMember')(sequelize);
 
 const initialize = () => {
   sequelize.sync({ force: true }).then(() => {
@@ -16,12 +16,13 @@ const initialize = () => {
         fullfilledDate: Date.now(),
         totalCost: 234.56,
       }).then(list => {
-        user.addList(list);
+        user.addList(list, { through: { role: 'creator' } });
       });
     });
   });
 };
-User.hasMany(List);
+User.belongsToMany(List, { through: ListMember });
+List.belongsToMany(User, { through: ListMember });
 initialize();
 
 module.exports = { User, List };
