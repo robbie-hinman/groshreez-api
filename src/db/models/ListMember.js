@@ -1,17 +1,13 @@
 const Sequelize = require('sequelize');
 
 module.exports = sequelize => {
-  const User = sequelize.define(
-    'user',
+  const ListMember = sequelize.define(
+    'listMember',
     {
       // attributes
-      firstName: {
+      role: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        // allowNull defaults to true
       },
     },
     {
@@ -19,5 +15,5 @@ module.exports = sequelize => {
     },
   );
 
-  return User;
+  return ListMember;
 };
