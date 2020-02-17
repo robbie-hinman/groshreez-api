@@ -14,13 +14,39 @@ const initialize = () => {
       firstName: 'Bob',
       lastName: 'Booper',
     }).then(user => {
-      List.create({
-        listName: 'First List',
-        storeName: 'first list store',
-        fullfilledDate: Date.now(),
-        totalCost: 234.56,
-      }).then(list => {
+      List.create(
+        {
+          listName: 'First List',
+          storeName: 'first list store',
+          fullfilledDate: Date.now(),
+          totalCost: 234.56,
+          store: { name: 'Vons' },
+        },
+        {
+          include: [Store],
+        },
+      ).then(list => {
         user.addList(list, { through: { role: 'creator' } });
+
+        Item.create(
+          {
+            name: 'paper tissues',
+            brand: 'kleenex',
+            itemType: { name: 'paper products' },
+          },
+          { include: [ItemType] },
+        ).then(item => {
+          list.addItem(item, {
+            through: {
+              count: 1,
+              inCart: false,
+              notes: 'dont forget this one',
+            },
+          });
+        });
+        // Store.create({ name: 'Vons' }).then(store =>
+        //   list.addStore(store),
+        // );
       });
     });
   });
