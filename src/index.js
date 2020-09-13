@@ -1,11 +1,30 @@
 require('dotenv').config();
 const express = require('express');
+const logger = require('morgan');
 const app = express();
+const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 3000;
 const models = require('./db');
+const auth = require('./auth');
+const bodyParser = require('body-parser');
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+var myLogger = function(req, res, next) {
+  console.log('LOGGED');
+  req.foo = '12345abc';
+  next();
+};
+
+app.use(myLogger);
+app.use(auth);
 
 app.get('/', (req, res) => {
-  res.send('hello world');
+  // const sessionInfo = JSON.stringify(req.session);
+  res.send(`hello world ${req.foo}`);
 });
 
 app.get('/users', (req, res, err) => {
