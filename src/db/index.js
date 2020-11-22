@@ -1,5 +1,8 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING);
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './database.sqlite',
+});
 const User = require('./models/User')(sequelize);
 const List = require('./models/List')(sequelize);
 const ListMember = require('./models/ListMember')(sequelize);
@@ -13,7 +16,7 @@ const initialize = () => {
     User.create({
       firstName: 'Bob',
       lastName: 'Booper',
-    }).then(user => {
+    }).then((user) => {
       List.create(
         {
           listName: 'First List',
@@ -25,7 +28,7 @@ const initialize = () => {
         {
           include: [Store],
         },
-      ).then(list => {
+      ).then((list) => {
         user.addList(list, { through: { role: 'creator' } });
 
         Item.create(
@@ -35,7 +38,7 @@ const initialize = () => {
             itemType: { name: 'paper products' },
           },
           { include: [ItemType] },
-        ).then(item => {
+        ).then((item) => {
           list.addItem(item, {
             through: {
               count: 1,
@@ -60,6 +63,6 @@ List.belongsToMany(Item, { through: ListItem });
 Item.belongsTo(ItemType);
 List.belongsTo(Store);
 
-initialize();
+// initialize();
 
 module.exports = { User, List };
