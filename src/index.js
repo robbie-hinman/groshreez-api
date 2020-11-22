@@ -13,7 +13,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-var myLogger = function(req, res, next) {
+// middleware test
+var myLogger = function (req, res, next) {
   console.log('LOGGED');
   req.foo = '12345abc';
   next();
@@ -28,7 +29,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/users', (req, res, err) => {
-  models.User.findAll().then(users => {
+  models.User.findAll().then((users) => {
     res.send(JSON.stringify(users));
   });
 });
