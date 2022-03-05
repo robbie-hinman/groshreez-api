@@ -7,6 +7,8 @@ const port = process.env.PORT || 3000;
 const models = require('./db');
 const auth = require('./auth');
 const bodyParser = require('body-parser');
+const { graphqlHTTP } = require('express-graphql');
+const { schema, root } = require('./graphql');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -22,6 +24,15 @@ var myLogger = function (req, res, next) {
 
 app.use(myLogger);
 app.use(auth);
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  }),
+);
 
 app.get('/', (req, res) => {
   // const sessionInfo = JSON.stringify(req.session);
