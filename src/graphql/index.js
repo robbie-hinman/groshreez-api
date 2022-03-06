@@ -12,7 +12,7 @@ var schema = buildSchema(`
   }
 
   input ListInput {
-    creatorId: Int!
+    userId: Int!
     listName: String!
   }
 
@@ -31,7 +31,7 @@ var schema = buildSchema(`
     fullfilledDate: DateTime
     createdAt: DateTime!
     updatedAt: DateTime!
-    creatorId: Int!
+    userId: Int!
   }
   
   type Query {
@@ -65,9 +65,9 @@ var root = {
     });
   },
   createList: async ({ input }) => {
-    const { creatorId, listName } = input;
+    const { userId, listName } = input;
     return models.List.create({
-      creatorId,
+      userId,
       listName,
     });
   },
