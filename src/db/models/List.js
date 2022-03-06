@@ -9,7 +9,7 @@ const Sequelize = require('sequelize');
  * a list name (if empty, FE will use set date)
  *
  * */
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const List = sequelize.define(
     'list',
     {
@@ -29,6 +29,10 @@ module.exports = sequelize => {
       totalCost: {
         type: Sequelize.DECIMAL(10, 2),
         // allowNull defaults to true
+      },
+      creatorId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
     },
     {

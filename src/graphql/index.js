@@ -11,6 +11,11 @@ var schema = buildSchema(`
     lastName: String!
   }
 
+  input ListInput {
+    creatorId: Int!
+    listName: String!
+  }
+
   type User {
     firstName: String!
     lastName: String!
@@ -26,6 +31,7 @@ var schema = buildSchema(`
     fullfilledDate: DateTime
     createdAt: DateTime!
     updatedAt: DateTime!
+    creatorId: Int!
   }
   
   type Query {
@@ -36,7 +42,8 @@ var schema = buildSchema(`
   }
 
   type Mutation {
-    createUser(firstName: String!, lastName: String!): User
+    createUser(input: UserInput!): User
+    createList(input: ListInput!): List
   }
 `);
 // updateUser(id: Int!, input: UserInput): User
@@ -50,10 +57,18 @@ var root = {
   list: async (args) => {
     return await models.List.findByPk(args.id);
   },
-  createUser: async ({ firstName, lastName }) => {
+  createUser: async ({ input }) => {
+    const { firstName, lastName } = input;
     return models.User.create({
       firstName,
       lastName,
+    });
+  },
+  createList: async ({ input }) => {
+    const { creatorId, listName } = input;
+    return models.List.create({
+      creatorId,
+      listName,
     });
   },
   DateTime: GraphQLDateTime,

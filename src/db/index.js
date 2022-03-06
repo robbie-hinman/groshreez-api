@@ -54,6 +54,11 @@ const initialize = () => {
     });
   });
 };
+
+const migrate = async () => {
+  await sequelize.sync({ alter: true });
+};
+
 User.belongsToMany(List, { through: ListMember });
 List.belongsToMany(User, { through: ListMember });
 
@@ -62,6 +67,8 @@ List.belongsToMany(Item, { through: ListItem });
 
 Item.belongsTo(ItemType);
 List.belongsTo(Store);
+
+// migrate();
 
 // initialize();
 
