@@ -1,6 +1,7 @@
 var { buildSchema } = require('graphql');
 var { GraphQLDateTime } = require('graphql-iso-date');
 const models = require('../db');
+const { Op } = require('sequelize');
 // Construct a schema, using GraphQL schema language
 
 var schema = buildSchema(`
@@ -38,6 +39,7 @@ var schema = buildSchema(`
     users: [User]
     user(id: Int!): User
     lists: [List]
+    listsByUserId(userId: Int!): [List]
     list(id: Int!): List
   }
 
@@ -54,6 +56,14 @@ var root = {
     return await models.User.findByPk(args.id);
   },
   lists: async () => await models.List.findAll(),
+  listsByUserId: async ({ userId }) =>
+    await models.List.findAll({
+      where: {
+        userId: {
+          [Op.eq]: userId,
+        },
+      },
+    }),
   list: async (args) => {
     return await models.List.findByPk(args.id);
   },
