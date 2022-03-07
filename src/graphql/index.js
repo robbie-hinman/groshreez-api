@@ -1,10 +1,10 @@
-var { buildSchema } = require('graphql');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 var { GraphQLDateTime } = require('graphql-iso-date');
 const models = require('../db');
 const { Op } = require('sequelize');
 // Construct a schema, using GraphQL schema language
 
-var schema = buildSchema(`
+var typeDefs = `
   scalar DateTime
 
   input UserInput {
@@ -23,6 +23,7 @@ var schema = buildSchema(`
     id: Int!
     createdAt: DateTime!
     updatedAt: DateTime!
+    lists: [List]
   }
 
   type List {
@@ -39,7 +40,6 @@ var schema = buildSchema(`
     users: [User]
     user(id: Int!): User
     lists: [List]
-    listsByUserId(userId: Int!): [List]
     list(id: Int!): List
   }
 
@@ -47,41 +47,54 @@ var schema = buildSchema(`
     createUser(input: UserInput!): User
     createList(input: ListInput!): List
   }
-`);
-// updateUser(id: Int!, input: UserInput): User
-// The root provides a resolver function for each API endpoint
-var root = {
-  users: async () => await models.User.findAll(),
-  user: async (args) => {
-    return await models.User.findByPk(args.id);
+`;
+
+var resolvers = {
+  Query: {
+    users: async () => await models.User.findAll(),
+    user: async (args) => {
+      console.log(args);
+      return await models.User.findByPk(args.id);
+    },
+    lists: async () => await models.List.findAll(),
+    list: async (args) => {
+      return await models.List.findByPk(args.id);
+    },
   },
-  lists: async () => await models.List.findAll(),
-  listsByUserId: async ({ userId }) =>
-    await models.List.findAll({
-      where: {
-        userId: {
-          [Op.eq]: userId,
-        },
-      },
-    }),
-  list: async (args) => {
-    return await models.List.findByPk(args.id);
-  },
-  createUser: async ({ input }) => {
-    const { firstName, lastName } = input;
-    return models.User.create({
-      firstName,
-      lastName,
-    });
-  },
-  createList: async ({ input }) => {
-    const { userId, listName } = input;
-    return models.List.create({
-      userId,
-      listName,
-    });
+  Mutation: {
+    createUser: async ({ input }) => {
+      const { firstName, lastName } = input;
+      return models.User.create({
+        firstName,
+        lastName,
+      });
+    },
+    createList: async ({ input }) => {
+      const { userId, listName } = input;
+      return models.List.create({
+        userId,
+        listName,
+      });
+    },
   },
   DateTime: GraphQLDateTime,
+  User: {
+    lists: async (user) => {
+      console.log('###!!!###!!!### HERE !!!!');
+      return await models.List.findAll({
+        where: {
+          userId: {
+            [Op.eq]: user.id,
+          },
+        },
+      });
+    },
+  },
 };
 
-module.exports = { schema, root };
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
+
+module.exports = { schema };

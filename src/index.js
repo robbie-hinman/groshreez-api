@@ -8,7 +8,7 @@ const models = require('./db');
 const auth = require('./auth');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
-const { schema, root } = require('./graphql');
+const { schema } = require('./graphql');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -29,7 +29,6 @@ app.use(
   '/graphql',
   graphqlHTTP({
     schema: schema,
-    rootValue: root,
     graphiql: true,
   }),
 );
