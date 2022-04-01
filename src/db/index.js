@@ -5,7 +5,7 @@ const sequelize = new Sequelize({
 });
 const User = require('./models/User')(sequelize);
 const List = require('./models/List')(sequelize);
-// const ListMember = require('./models/ListMember')(sequelize);
+const ListMember = require('./models/ListMember')(sequelize);
 const Item = require('./models/Item')(sequelize);
 const ItemType = require('./models/ItemType')(sequelize);
 const ListItem = require('./models/ListItem')(sequelize);
@@ -59,10 +59,12 @@ const migrate = async () => {
   await sequelize.sync({ alter: true, force: true });
 };
 
-// User.belongsToMany(List, { through: ListMember });
-// List.belongsToMany(User, { through: ListMember });
+User.belongsToMany(List, { through: ListMember });
+List.belongsToMany(User, { through: ListMember });
 User.hasMany(List);
-List.belongsTo(User);
+List.belongsTo(User, {
+  foreignKey: 'creatorId',
+});
 
 Item.belongsToMany(List, { through: ListItem });
 List.belongsToMany(Item, { through: ListItem });

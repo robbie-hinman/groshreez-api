@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const Item = sequelize.define(
     'item',
     {
@@ -10,6 +10,10 @@ module.exports = sequelize => {
         allowNull: false,
       },
       brand: {
+        type: Sequelize.STRING,
+        // allowNull defaults to true
+      },
+      size: {
         type: Sequelize.STRING,
         // allowNull defaults to true
       },

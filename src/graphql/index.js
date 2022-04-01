@@ -33,7 +33,8 @@ var typeDefs = `
     fullfilledDate: DateTime
     createdAt: DateTime!
     updatedAt: DateTime!
-    userId: Int!
+    creator: User!
+    members: [User]
   }
   
   type Query {
@@ -41,6 +42,7 @@ var typeDefs = `
     user(id: Int!): User
     lists: [List]
     list(id: Int!): List
+    
   }
 
   type Mutation {
@@ -52,27 +54,26 @@ var typeDefs = `
 var resolvers = {
   Query: {
     users: async () => await models.User.findAll(),
-    user: async (args) => {
-      console.log(args);
+    user: async (parent, args) => {
       return await models.User.findByPk(args.id);
     },
     lists: async () => await models.List.findAll(),
-    list: async (args) => {
+    list: async (parent, args) => {
       return await models.List.findByPk(args.id);
     },
   },
   Mutation: {
-    createUser: async ({ input }) => {
+    createUser: async (parent, { input }) => {
       const { firstName, lastName } = input;
       return models.User.create({
         firstName,
         lastName,
       });
     },
-    createList: async ({ input }) => {
+    createList: async (parent, { input }) => {
       const { userId, listName } = input;
       return models.List.create({
-        userId,
+        creatorId: userId,
         listName,
       });
     },
@@ -80,11 +81,24 @@ var resolvers = {
   DateTime: GraphQLDateTime,
   User: {
     lists: async (user) => {
-      console.log('###!!!###!!!### HERE !!!!');
       return await models.List.findAll({
         where: {
           userId: {
             [Op.eq]: user.id,
+          },
+        },
+      });
+    },
+  },
+  List: {
+    creator: async (list) => {
+      return await models.User.findByPk(list.creatorId);
+    },
+    members: async (list) => {
+      return await models.User.findAll({
+        where: {
+          userId: {
+            [Op.in]: list.members,
           },
         },
       });

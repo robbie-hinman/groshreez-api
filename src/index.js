@@ -16,13 +16,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // middleware test
-var myLogger = function (req, res, next) {
-  console.log('LOGGED');
-  req.foo = '12345abc';
-  next();
-};
+// var myLogger = function (req, res, next) {
+//   console.log('LOGGED');
+//   req.foo = '12345abc';
+//   next();
+// };
 
-app.use(myLogger);
+// app.use(myLogger);
 app.use(auth);
 
 app.use(
