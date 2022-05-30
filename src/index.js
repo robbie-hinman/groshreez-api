@@ -4,7 +4,7 @@ const logger = require('morgan');
 const app = express();
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 3000;
-const models = require('./db');
+const models = require('./db/models');
 const auth = require('./auth');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
@@ -38,16 +38,16 @@ app.get('/', (req, res) => {
   res.send(`hello world ${req.foo}`);
 });
 
-app.get('/users', (req, res, err) => {
-  models.User.findAll().then((users) => {
-    res.send(JSON.stringify(users));
-  });
-});
+// app.get('/users', (req, res) => {
+//   models.User.findAll().then(users => {
+//     res.send(JSON.stringify(users));
+//   });
+// });
 
-app.get('/users-aw', async (req, res, err) => {
-  const users = await models.User.findAll();
-  res.send(JSON.stringify(users));
-});
+// app.get('/users-aw', async (req, res) => {
+//   const users = await models.User.findAll();
+//   res.send(JSON.stringify(users));
+// });
 
 // check if the connection string works.
 // sequelize
@@ -59,6 +59,8 @@ app.get('/users-aw', async (req, res, err) => {
 //     console.error('Unable to connect to the database:', err);
 //   });
 
-app.listen(port, () =>
-  console.log(`Express web app available at localhost: ${port}`),
-);
+models.sequelize.sync().then(() => {
+  app.listen(port, () =>
+    console.log(`Express web app available at localhost: ${port}`),
+  );
+});
