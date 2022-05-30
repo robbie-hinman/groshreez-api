@@ -1,24 +1,19 @@
-const Sequelize = require('sequelize');
-
-module.exports = sequelize => {
+module.exports = (sequelize, DataTypes) => {
   const ListItem = sequelize.define(
     'listItem',
     {
       // attributes
       price: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(10, 2),
       },
       count: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         // allowNull defaults to true
       },
       inCart: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-      },
-      notes: {
-        type: Sequelize.STRING,
       },
     },
     {

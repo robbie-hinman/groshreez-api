@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js",
+    "start": "nodemon --exec babel-node src/index.js",
     "lint": "eslint src",
     "dbshell": "sqlite3 database.sqlite"
   },
@@ -21,6 +21,9 @@
   "homepage": "https://github.com/robbie-hinman/groshreez-api#readme",
   "dependencies": {
     "@graphql-tools/schema": "^8.3.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",

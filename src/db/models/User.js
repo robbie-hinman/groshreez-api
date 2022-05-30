@@ -1,23 +1,38 @@
-const Sequelize = require('sequelize');
-
-module.exports = sequelize => {
+module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'user',
     {
       // attributes
-      firstName: {
-        type: Sequelize.STRING,
+      username: {
+        type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
-      lastName: {
-        type: Sequelize.STRING,
-        // allowNull defaults to true
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      zipcode: {
+        type: DataTypes.STRING,
       },
     },
     {
       // options
     },
   );
+
+  User.associate = models => {
+    //
+    User.belongsToMany(models.List, {
+      through: 'member',
+      foreignKey: 'userId',
+    });
+  };
 
   return User;
 };
